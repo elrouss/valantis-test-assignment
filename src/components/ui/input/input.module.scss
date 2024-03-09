@@ -1,0 +1,9 @@
+@use '../../../styles/colors.scss' as *;
+
+.input {
+  border: none;
+}
+
+.error {
+  background-color: $error;
+}

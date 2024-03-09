@@ -1,0 +1,30 @@
+{
+  "form": {
+    "input": {
+      "placeholder": "Ключевое слово"
+    },
+    "btn": "Выполнить"
+  },
+  "head": ["Id", "Название", "Бренд", "Цена"],
+  "filters": {
+    "name": "goods",
+    "fields": [
+      {
+        "label": "Название",
+        "value": "product"
+      },
+      {
+        "label": "Бренд",
+        "value": "brand"
+      },
+      {
+        "label": "Цена",
+        "value": "price"
+      },
+      {
+        "label": "Сбросить фильтры",
+        "value": "reset"
+      }
+    ]
+  }
+}

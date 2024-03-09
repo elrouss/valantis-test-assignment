@@ -1,0 +1,19 @@
+@use '../../../styles/colors.scss' as *;
+@use '../../../styles/animations.scss' as *;
+
+.btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  user-select: none;
+  transition: background-color $basic-duration-time $basic-duration-effect;
+
+  &:hover {
+    background-color: rgba($white, 0.8);
+  }
+
+  &:disabled {
+    background-color: rgba($white, 0.5);
+    pointer-events: none;
+  }
+}

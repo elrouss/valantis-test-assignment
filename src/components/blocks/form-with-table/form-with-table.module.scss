@@ -1,0 +1,15 @@
+.form {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.filters {
+  display: grid;
+  justify-items: center;
+}
+
+.input {
+  display: flex;
+  align-items: center;
+  column-gap: 15px;
+}

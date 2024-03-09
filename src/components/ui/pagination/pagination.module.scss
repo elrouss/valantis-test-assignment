@@ -1,0 +1,24 @@
+.activeBtn {
+  button {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .dots {
+    & > button {
+      background-color: transparent;
+    }
+  }
+}
+
+.paginationItem {
+  &:not(:first-child) {
+    margin-left: 10px;
+  }
+}

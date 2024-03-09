@@ -1,0 +1,74 @@
+@use '../../../styles/colors.scss' as *;
+@use '../../../styles/z-index.scss' as *;
+
+.wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.tableWrapper {
+  width: 100%;
+  min-height: 500px;
+  height: 500px;
+  overflow-y: scroll;
+}
+
+.table {
+  position: relative;
+  width: 100%;
+  border: 1px solid $white;
+  border-collapse: collapse;
+
+  td {
+    border: 1px solid $white;
+    text-align: center;
+
+    &:first-child {
+      width: 20%;
+    }
+
+    &:nth-child(3n) {
+      width: 20%;
+    }
+
+    &:last-child {
+      width: 10%;
+    }
+  }
+}
+
+.thead {
+  position: sticky;
+  top: -1px;
+  z-index: $z-index-default;
+  background-color: $black;
+  text-transform: uppercase;
+
+  th {
+    border: 1px solid $white;
+  }
+}
+
+.tbody {
+  color: $black;
+
+  tr {
+    background-color: rgba($white, 0.4);
+
+    &:nth-child(even) {
+      background-color: rgba($white, 0.6);
+    }
+  }
+}
+
+.preloader {
+  display: none;
+}
+
+.preloaderVisible {
+  display: block;
+}
+
+.loading {
+  opacity: 0.5;
+}
