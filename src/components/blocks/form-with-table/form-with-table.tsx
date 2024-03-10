@@ -20,7 +20,12 @@ interface IFormWithTableProps extends IFormWithTable {
   table: IGoodsTableExtended;
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsInitiallyLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsInitiallyLoading: React.Dispatch<
+    React.SetStateAction<{
+      isLoading: boolean;
+      shouldBeInitialData: boolean;
+    }>
+  >;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
 }
 
@@ -41,7 +46,10 @@ export const FormWithTable = ({
     evt.preventDefault();
 
     if (radioValue === 'reset') {
-      setIsInitiallyLoading(true);
+      setIsInitiallyLoading((prevState) => ({
+        ...prevState,
+        shouldBeInitialData: true,
+      }));
       table.setFilteredIds(null);
       table.setCurrentPage(1);
 
@@ -69,6 +77,7 @@ export const FormWithTable = ({
       table.setFilteredIds(ids);
       table.setCurrentPage(1);
     } catch (e) {
+      console.error(e);
       setErrorMessage(handleErrors(e as AxiosError));
     }
   };

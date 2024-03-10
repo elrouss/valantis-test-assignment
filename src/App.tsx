@@ -11,7 +11,10 @@ import { IGoodsItem } from './types';
 import { MAX_ITEMS } from './utils/variables';
 
 export const App = () => {
-  const [isInitiallyLoading, setIsInitiallyLoading] = useState(true);
+  const [isInitiallyLoading, setIsInitiallyLoading] = useState({
+    isLoading: true,
+    shouldBeInitialData: true,
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<Array<IGoodsItem> | null>(null);
   const [filteredIds, setFilteredIds] = useState<string[] | null>(null);
@@ -26,15 +29,17 @@ export const App = () => {
       try {
         if (!filteredIds) {
           const ids = await getIds(
-            isInitiallyLoading
+            isInitiallyLoading.shouldBeInitialData
               ? undefined
               : { offset: (currentPage - 1) * MAX_ITEMS, limit: MAX_ITEMS }
           );
 
-          if (isInitiallyLoading) setTotalCount(ids.length);
+          if (isInitiallyLoading.shouldBeInitialData) setTotalCount(ids.length);
 
           const items = await getItems(
-            isInitiallyLoading ? ids.slice(0, MAX_ITEMS) : ids
+            isInitiallyLoading.shouldBeInitialData
+              ? ids.slice(0, MAX_ITEMS)
+              : ids
           );
 
           setData(items);
@@ -55,10 +60,11 @@ export const App = () => {
           setData(items);
         }
       } catch (e) {
+        console.error(e);
         setErrorMessage(handleErrors(e as AxiosError));
       } finally {
         setIsLoading(false);
-        setIsInitiallyLoading(false);
+        setIsInitiallyLoading({ isLoading: false, shouldBeInitialData: false });
       }
     };
 
@@ -67,13 +73,13 @@ export const App = () => {
 
   return (
     <>
-      {isInitiallyLoading && <Preloader />}
+      {isInitiallyLoading.isLoading && <Preloader />}
 
-      {!isInitiallyLoading && errorMessage && (
+      {!isInitiallyLoading.isLoading && errorMessage && (
         <ErrorMessage text={errorMessage} />
       )}
 
-      {!isInitiallyLoading && !errorMessage && data && (
+      {!isInitiallyLoading.isLoading && !errorMessage && data && (
         <FormWithTable
           form={goodsTableJson.form}
           table={{
