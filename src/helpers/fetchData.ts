@@ -5,7 +5,7 @@ import { getCurrentTimestamp } from './getCurrentTimestamp';
 import { IGetIds, IGetItems, IGetFields, IFilter, IGoodsItem } from '@/types';
 
 axiosRetry(axios, {
-  retries: 3,
+  retries: 5,
   retryDelay: (...args) => axiosRetry.exponentialDelay(...args, 1000),
   retryCondition(error) {
     switch (error.response?.status) {
@@ -14,12 +14,6 @@ axiosRetry(axios, {
         return true;
       default:
         return false;
-    }
-  },
-  onRetry: (retryCount, _, requestConfig) => {
-    if (retryCount === 3) {
-      // eslint-disable-next-line no-param-reassign
-      requestConfig.url = import.meta.env.VITE_API_URL_OPENAPI_2 as string;
     }
   },
 });
