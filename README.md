@@ -1,30 +1,63 @@
-# React + TypeScript + Vite
+<h1 align="center">Тестовое задание на должность "Frontend-разработчик" в ювелирной мастерской <a href="https://valantis.store/">Valantis</a></h1>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<div align="center">
+  <a href="#">
+    <img width="575" alt="Главная страница приложения" src="https://github.com/elrouss/valantis-test-assignment/assets/108838349/b60e118c-c801-4928-8bf2-68977357b4bc" />
+  </a>
+</div>
 
-Currently, two official plugins are available:
+<a name="summary">
+  <details>
+    <summary>Оглавление</summary>
+    <ol>
+      <li><a href="#project-description">Краткое описание проекта</a></li>
+      <li><a href="#technologies">Стек технологий</a></li>
+      <li><a href="#installation">Установка и запуск приложения</a></li>
+      <li><a href="#peculiarProperties">Особенности работы приложения</a></li>
+    </ol>
+  </details>
+</a>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+<a name="project-description"><h2>1. Краткое описание проекта</h2></a>
+Проект представляет собой страницу со списком товаров в виде таблицы с пагинацией в обе стороны. Для каждого товара отображаются 4 поля: id, название, цена и бренд. Список возможно фильтровать по 3 последним полям, используя механизм стороннего API
 
-## Expanding the ESLint configuration
+<b>Ссылки на проект:</b>
+<br>
+Задание: https://github.com/ValantisJewelry/TestTaskValantis/blob/main/README.md
+<br>
+Деплой: *Появится позже*
+<br>
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+<div align="right">(<a href="#summary">к оглавлению</a>)</div>
 
-- Configure the top-level `parserOptions` property like this:
+<a name="technologies"><h2>2. Стек технологий</h2></a>
+<span>
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="Иконка 'React'">
+  <img src="https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E" alt="Иконка 'React Vite'">
+  <img src="https://img.shields.io/badge/axios-671ddf?&style=for-the-badge&logo=axios&logoColor=white" alt="Иконка 'Axios'">
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="Иконка 'TypeScript'">
+  <img src="https://img.shields.io/badge/Sass-CC6699?style=for-the-badge&logo=sass&logoColor=white" alt="Иконка 'Sass (SCSS)'">
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="Иконка 'HTML5'">
+</span>
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+<div align="right">(<a href="#summary">к оглавлению</a>)</div>
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+<a name="installation"><h2>3. Установка и запуск приложения</h2></a>
+
+1. `git clone https://github.com/elrouss/valantis-test-assignment.git` - клонировать репозиторий (HTTPS)
+2. `npm i` - установить зависимости
+3. `npm run prepare` - установить <a href="https://typicode.github.io/husky/">husky</a>
+4. Добавить в корне проекта файл `.env` и скопировать в него содержимое `.env.example`
+5. `npm run dev` - запустить приложение и перейти по ссылке `http://localhost:5173/`
+
+<div align="right">(<a href="#summary">к оглавлению</a>)</div>
+
+
+<a name="peculiarProperties"><h2>4. Особенности работы приложения</h2></a>
+
+- На странице выводится до 50 товаров с фильтрацией дублирующихся товаров по id, которые возвращаются с сервера. Максимальное количество товаров можно переопределить в переменной `MAX_ITEMS` внутри файла `src/utils/variables.ts`. При работе с фильтрацией по параметрам в случае отсутствия данных в таблице отобразится соответствующий текст
+- В случае возникновения серверной ошибки действует механизм повторных запросов (2 - по первому api, 1 - по второму api); если все 3 попытки неудачные, то на экране появляется сообщение о серверной ошибке с предложением пользователю обновить страницу либо попробовать зайти на сайт позже
+- Для получения серверных данных требуется передавать особое значение <b>X-Auth</b>, в которое входит сегодняшняя дата: она высчитывается на устройстве пользователя автоматически. Однако замечено, что после полуночи (по мск) в течение некоторого времени сервер отказывается принимать актуальную дату, для чего в файле `src/helpers/getCurrentTimestamp.ts` можно вручную перевести дату на день назад; как вариант - подменить метку в механизме повторных запросов в случае возвращения 401-й ошибки в файле `src/helpers/fetchData.ts`, однако, на данном этапе было принято решение не фиксить данную проблему. В случае ошибки авторизации на экране пользователя появится соответствующий текст
+- В приложение не заложен отзывчиво-адаптивный интерфейс (будет некорректно отображаться в пейзажной ориентации на планшетах и мобильных телефонах)
+
+<div align="right">(<a href="#summary">к оглавлению</a>)</div>
