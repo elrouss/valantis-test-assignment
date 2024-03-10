@@ -32,6 +32,7 @@ export const Pagination = ({
 
   return (
     <ul className={`${styles.pagination}${extraClass ? ` ${extraClass}` : ''}`}>
+      {/* Крайняя левая кнопка со стрелкой "Назад" */}
       <li className={styles.paginationItem}>
         <PaginationBtn
           text="&larr;"
@@ -39,17 +40,20 @@ export const Pagination = ({
           onClick={onPrevious}
         />
       </li>
-      {paginationRange.map((pageNumber) => {
+      {paginationRange.map((pageNumber, i) => {
+        // Кнопки в виде многоточия
         if (pageNumber === DOTS) {
           return (
-            <li className={`${styles.paginationItem} ${styles.dots}`}>
+            <li key={i} className={`${styles.paginationItem} ${styles.dots}`}>
               <PaginationBtn disabled text="&#8230;" />
             </li>
           );
         }
 
+        // Кнопки с пагинацией
         return (
           <li
+            key={i}
             className={`${styles.paginationItem}${currentPage === pageNumber ? ` ${styles.activeBtn}` : ''}`}
           >
             <PaginationBtn
@@ -60,6 +64,8 @@ export const Pagination = ({
           </li>
         );
       })}
+
+      {/* Крайняя правая кнопка со стрелкой "Вперед" */}
       <li className={styles.paginationItem}>
         <PaginationBtn
           text="&rarr;"

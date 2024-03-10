@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './goods-table.module.scss';
+import commonJson from '../../../assets/data/ru/common.json';
 import { Preloader } from '@/components/common/preloader/preloader';
 import { Pagination } from '@/components/ui/pagination/pagination';
 import { IGoodsTable } from '@/types';
@@ -39,14 +40,20 @@ export const GoodsTable = ({
           <tbody
             className={`${styles.tbody}${isLoading ? ` ${styles.loading}` : ''}`}
           >
-            {body.map((item) => (
-              <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>{item.product || '-'}</td>
-                <td>{item.brand || '-'}</td>
-                <td>{`${item.price?.toLocaleString()} \u20BD` || '-'}</td>
+            {body?.length ? (
+              body.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.id}</td>
+                  <td>{item.product || '-'}</td>
+                  <td>{item.brand || '-'}</td>
+                  <td>{`${item.price?.toLocaleString()} \u20BD` || '-'}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={4}>{commonJson.errors.empty}</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import React, { useState } from 'react';
 import styles from './form-with-table.module.scss';
 import { GoodsTable } from '../goods-table/goods-table';
@@ -5,6 +6,7 @@ import { Radios } from '../radios/radios';
 import { filter } from '@/api/filter';
 import { Btn } from '@/components/ui/btn/btn';
 import { Input } from '@/components/ui/input/input';
+import { handleErrors } from '@/helpers/handleErrors';
 import { IGoodsTable, IFormWithTable, TFiltersValues } from '@/types';
 import { MAX_ITEMS } from '@/utils/variables';
 
@@ -19,6 +21,7 @@ interface IFormWithTableProps extends IFormWithTable {
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setIsInitiallyLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const FormWithTable = ({
@@ -28,6 +31,7 @@ export const FormWithTable = ({
   isLoading,
   setIsLoading,
   setIsInitiallyLoading,
+  setErrorMessage,
 }: IFormWithTableProps) => {
   const [inputValue, setInputValue] = useState('');
   const [isInputValid, setIsInputValid] = useState(true);
@@ -56,14 +60,17 @@ export const FormWithTable = ({
     try {
       const ids = await filter({
         [radioValue]:
-          radioValue === 'price' ? +inputValue.replace(/\s/g, '') : inputValue,
+          radioValue === 'price'
+            ? +inputValue.replace(/[^\d]/g, '')
+            : inputValue,
       } as Record<TFiltersValues, string | number>);
 
       table.setTotalCount(ids.length);
       table.setFilteredIds(ids);
       table.setCurrentPage(1);
-      // eslint-disable-next-line no-empty
-    } catch (e) {}
+    } catch (e) {
+      setErrorMessage(handleErrors(e as AxiosError));
+    }
   };
 
   return (

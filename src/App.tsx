@@ -2,11 +2,11 @@ import { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
 import { getIds } from './api/getIds';
 import { getItems } from './api/getItems';
-import commonJson from './assets/data/ru/common.json';
 import goodsTableJson from './assets/data/ru/goods-table.json';
 import { FormWithTable } from './components/blocks/form-with-table/form-with-table';
 import { ErrorMessage } from './components/common/error-message/error-message';
 import { Preloader } from './components/common/preloader/preloader';
+import { handleErrors } from './helpers/handleErrors';
 import { IGoodsItem } from './types';
 import { MAX_ITEMS } from './utils/variables';
 
@@ -21,7 +21,7 @@ export const App = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!isInitiallyLoading) setIsLoading(true);
+      setIsLoading(true);
 
       try {
         if (!filteredIds) {
@@ -40,7 +40,10 @@ export const App = () => {
           setData(items);
         } else {
           if (!filteredIds?.length) {
-            setErrorMessage(commonJson.errors.empty);
+            setData([]);
+            // Устанавливаем единицу для сохранения кнопки с пагинацией
+            // в случае отсутствия выдачи по запросу
+            setTotalCount(1);
             return;
           }
 
@@ -52,15 +55,9 @@ export const App = () => {
           setData(items);
         }
       } catch (e) {
-        switch ((e as AxiosError).response?.status) {
-          case 401:
-            setErrorMessage(commonJson.errors.authorization);
-            break;
-          default:
-            setErrorMessage(commonJson.errors.internal);
-        }
+        setErrorMessage(handleErrors(e as AxiosError));
       } finally {
-        if (!isInitiallyLoading) setIsLoading(false);
+        setIsLoading(false);
         setIsInitiallyLoading(false);
       }
     };
@@ -70,7 +67,13 @@ export const App = () => {
 
   return (
     <>
-      {!isInitiallyLoading && !errorMessage && data?.length && (
+      {isInitiallyLoading && <Preloader />}
+
+      {!isInitiallyLoading && errorMessage && (
+        <ErrorMessage text={errorMessage} />
+      )}
+
+      {!isInitiallyLoading && !errorMessage && data && (
         <FormWithTable
           form={goodsTableJson.form}
           table={{
@@ -86,14 +89,9 @@ export const App = () => {
           isLoading={isLoading}
           setIsLoading={setIsLoading}
           setIsInitiallyLoading={setIsInitiallyLoading}
+          setErrorMessage={setErrorMessage}
         />
       )}
-      {!isInitiallyLoading &&
-        errorMessage &&
-        errorMessage !== commonJson.errors.empty && (
-          <ErrorMessage text={errorMessage} />
-        )}
-      {isInitiallyLoading && <Preloader />}
     </>
   );
 };
